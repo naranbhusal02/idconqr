@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Management System</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .menu-container {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .menu-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .menu-button {
+            padding: 20px;
+            font-size: 1.2em;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .menu-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(67, 97, 238, 0.2);
+        }
+
+        .menu-button i {
+            margin-right: 10px;
+            font-size: 1.5em;
+        }
+
+        .day-selector {
+            margin: 30px 0;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .day-selector label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #555;
+            font-size: 1.1em;
+        }
+
+        .day-selector-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .day-selector select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            padding: 12px 40px 12px 20px;
+            font-size: 1.1em;
+            border-radius: 30px;
+            border: 2px solid var(--primary-color);
+            background-color: white;
+            color: var(--primary-color);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 180px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(67, 97, 238, 0.15);
+        }
+
+        .day-selector select:hover {
+            background-color: rgba(67, 97, 238, 0.05);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(67, 97, 238, 0.2);
+        }
+
+        .day-selector select:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.3);
+        }
+
+        .day-selector-wrapper::after {
+            content: "▼";
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-color);
+            pointer-events: none;
+            font-size: 0.8em;
+            transition: transform 0.3s ease;
+        }
+
+        .day-selector-wrapper:hover::after {
+            transform: translateY(-50%) rotate(180deg);
+        }
+
+        .day-change-notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--success-color);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.3s, fadeOut 0.3s 2.7s;
+            font-weight: 600;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+
+        .day-badge {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin-left: 10px;
+            vertical-align: middle;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(67, 97, 238, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(67, 97, 238, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(67, 97, 238, 0);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .day-selector select {
+                width: 160px;
+                padding: 10px 35px 10px 15px;
+                font-size: 1em;
+            }
+
+            .day-selector label {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Event Management System</h1>
+            <p class="subtitle">Select an option to continue</p>
+        </header>
+
+        <div class="menu-container">
+            <div class="menu-title">
+                <h2>What would you like to do?</h2>
+            </div>
+
+            <div id="daySelector" class="day-selector">
+                <!-- Day selector will be inserted here by JavaScript -->
+            </div>
+
+            <div class="menu-buttons">
+                <a href="entry.html" class="menu-button">
+                    <span>Entry Check-in</span>
+                </a>
+                <a href="food.html" class="menu-button">
+                    <span>Food Check-in</span>
+                </a>
+                <a href="tshirt.html" class="menu-button">
+                    <span>T-Shirt Distribution</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script>
+        // Setup day selector that will be used across all pages
+        document.addEventListener('DOMContentLoaded', () => {
+            const eventDay = localStorage.getItem('eventDay') || 1;
+
+            // Create day selector
+            const daySelector = document.getElementById('daySelector');
+            daySelector.innerHTML = `
+                <label for="eventDaySelect">Select Event Day</label>
+                <div class="day-selector-wrapper">
+                    <select id="eventDaySelect">
+                        <option value="1" ${eventDay == 1 ? 'selected' : ''}>Day 1</option>
+                        <option value="2" ${eventDay == 2 ? 'selected' : ''}>Day 2</option>
+                        <option value="3" ${eventDay == 3 ? 'selected' : ''}>Day 3</option>
+                    </select>
+                </div>
+                <div class="day-badge">Active: Day ${eventDay}</div>
+            `;
+
+            // Listen for day changes
+            document.getElementById('eventDaySelect').addEventListener('change', (e) => {
+                const newDay = e.target.value;
+                localStorage.setItem('eventDay', newDay);
+
+                // Update the day badge
+                document.querySelector('.day-badge').textContent = `Active: Day ${newDay}`;
+
+                // Show a notification
+                const notification = document.createElement('div');
+                notification.className = 'day-change-notification';
+                notification.textContent = `Day changed to ${newDay}. Entry and food count reset for the new day.`;
+                document.querySelector('.container').prepend(notification);
+                setTimeout(() => {
+                    notification.style.animation = 'fadeOut 0.5s forwards';
+                    setTimeout(() => notification.remove(), 500);
+                }, 3000);
+            });
+        });
+    </script>
+</body>
+
+</html>

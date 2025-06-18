@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T-Shirt Distribution</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <style>
+        .scanner-wrapper {
+            margin-bottom: 20px;
+        }
+
+        .tshirt-container {
+            margin-top: 20px;
+        }
+
+        .btn-large {
+            padding: 12px 24px;
+            font-size: 1.1em;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 8px 16px;
+            background-color: #f1f1f1;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .back-button:hover {
+            background-color: #e0e0e0;
+        }
+
+        .manual-entry {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .reader {
+            min-height: 300px;
+        }
+
+        @media (max-width: 768px) {
+            .manual-entry {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .manual-entry input {
+                width: 100%;
+            }
+
+            .btn-large {
+                width: 100%;
+            }
+
+            .reader {
+                min-height: 250px;
+            }
+
+            .system-notification {
+                width: 90%;
+                left: 5%;
+                right: 5%;
+                text-align: center;
+            }
+        }
+
+        /* Enhanced status styles */
+
+        .status-received {
+            color: #28a745 !important;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            color: #dc3545 !important;
+            font-weight: bold;
+        }
+
+        .btn.secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn.secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .system-notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 24px;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+            z-index: 1000;
+            max-width: 90%;
+            text-align: center;
+        }
+
+        .system-notification.success {
+            background-color: #28a745;
+        }
+
+        .system-notification.error {
+            background-color: #dc3545;
+        }
+
+        .system-notification.warning {
+            background-color: #ffc107;
+            color: #212529;
+        }
+
+        .system-notification.info {
+            background-color: #17a2b8;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .result-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 16px;
+            margin-top: 10px;
+        }
+
+        .detail-row {
+            margin-bottom: 8px;
+        }
+
+        .detail-label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .detail-value {
+            color: #555;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>T-Shirt Distribution</h1>
+            <p class="subtitle">Scan QR code to distribute T-Shirts</p>
+        </header>
+
+        <a href="index.html" class="back-button">← Back to Menu</a>
+
+        <div class="scanner-wrapper">
+            <h2>Scan For T-Shirt</h2>
+            <div id="reader" class="reader"></div>
+            <div class="manual-entry">
+                <input type="text" id="manualInput" placeholder="Or enter code manually...">
+                <button id="submitManual" class="btn primary">Submit</button>
+            </div>
+        </div>
+
+
+        <div class="tshirt-container">
+            <button id="markTshirtBtn" class="btn primary btn-large" disabled>Mark T-Shirt Received</button>
+        </div>
+
+        <div class="result-container" id="resultContainer">
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Processing...</p>
+            </div>
+
+            <div id="resultContent" class="hidden">
+                <div class="result-header">
+                    <h2>Scan Result</h2>
+                    <span id="statusBadge" class="badge"></span>
+                </div>
+                <div class="result-card">
+                    <div class="result-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Name:</span>
+                            <span class="detail-value" id="name">-</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">ID:</span>
+                            <span class="detail-value" id="id">-</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Home Club:</span>
+                            <span class="detail-value" id="homeclub">-</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Zone:</span>
+                            <span class="detail-value" id="zone">-</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">T-Shirt Status:</span>
+                            <span class="detail-value" id="tshirtStatus">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="errorMessage" class="error-message hidden"></div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="successSound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3"
+        preload="auto"></audio>
+    <audio id="errorSound" src="https://assets.mixkit.co/active_storage/sfx/2053/2053-preview.mp3"
+        preload="auto"></audio>
+
+    <script src="js/config.js"></script>
+    <script src="js/scanner.js"></script>
+    <script src="js/tshirt.js"></script>
+    <script>
+        // Add this function to tshirtApp, entryApp, and foodApp
+        function showResults() {
+            const resultContent = document.getElementById('resultContent');
+
+            // First remove hidden class to make element visible
+            resultContent.classList.remove('hidden');
+
+            // Force reflow to enable animation
+            void resultContent.offsetWidth;
+
+            // Apply a subtle entrance animation
+            resultContent.style.animation = 'fadeIn 0.3s ease';
+
+            // Scroll to results if they're below the viewport
+            setTimeout(() => {
+                const rect = resultContent.getBoundingClientRect();
+                if (rect.top + 100 > window.innerHeight) {
+                    resultContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 100);
+        }
+    </script>
+</body>
+
+</html>

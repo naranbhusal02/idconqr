@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Check-in</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <style>
+        .scanner-wrapper {
+            margin-bottom: 20px;
+        }
+        
+        .action-container {
+            margin-top: 20px;
+        }
+        
+        .meal-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .meal-status {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .meal-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            background-color: #e0e0e0;
+            color: #333;
+        }
+        
+        .meal-badge.active {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .back-button {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 8px 16px;
+            background-color: #f1f1f1;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+        
+        .back-button:hover {
+            background-color: #e0e0e0;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Food Check-in</h1>
+            <p class="subtitle">Scan QR code to check meals</p>
+            <div id="dayDisplay" class="day-display">Day: 1</div>
+        </header>
+
+        <a href="index.html" class="back-button">← Back to Menu</a>
+
+        <div class="scanner-wrapper">
+            <h2>Scan For Food</h2>
+            <div id="reader" class="reader"></div>
+            <div class="manual-entry">
+                <input type="text" id="manualInput" placeholder="Or enter code manually...">
+                <button id="submitManual" class="btn primary">Submit</button>
+            </div>
+        </div>
+
+        <div class="action-container">
+            <h3>Select meal to mark:</h3>
+            <div class="meal-buttons">
+                <button id="markBreakfastBtn" class="btn primary" disabled>Mark Breakfast</button>
+                <button id="markLunchBtn" class="btn primary" disabled>Mark Lunch</button>
+                <button id="markDinnerBtn" class="btn primary" disabled>Mark Dinner</button>
+            </div>
+            <div class="meal-status">
+                <span class="meal-badge" id="breakfastBadge">Breakfast</span>
+                <span class="meal-badge" id="lunchBadge">Lunch</span>
+                <span class="meal-badge" id="dinnerBadge">Dinner</span>
+            </div>
+        </div>
+
+        <div class="result-container" id="resultContainer">
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Processing...</p>
+            </div>
+
+            <div id="resultContent" class="hidden">
+                <div class="result-header">
+                    <h2>Scan Result</h2>
+                    <span id="statusBadge" class="badge"></span>
+                </div>
+                <div class="result-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Name:</span>
+                        <span class="detail-value" id="name">-</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">ID:</span>
+                        <span class="detail-value" id="id">-</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Home Club:</span>
+                        <span class="detail-value" id="homeclub">-</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Zone:</span>
+                        <span class="detail-value" id="zone">-</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Entry Status:</span>
+                        <span class="detail-value" id="entryStatus">-</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Event Day:</span>
+                        <span class="detail-value" id="eventDay">-</span>
+                    </div>
+                </div>
+
+                <div id="errorMessage" class="error-message hidden"></div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="successSound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
+    <audio id="errorSound" src="https://assets.mixkit.co/active_storage/sfx/2053/2053-preview.mp3" preload="auto"></audio>
+
+    <script src="js/config.js"></script>
+    <script src="js/scanner.js"></script>
+    <script src="js/food.js"></script>
+    <script>
+        // Add this function to tshirtApp, entryApp, and foodApp
+        function showResults() {
+            const resultContent = document.getElementById('resultContent');
+            
+            // First remove hidden class to make element visible
+            resultContent.classList.remove('hidden');
+            
+            // Force reflow to enable animation
+            void resultContent.offsetWidth;
+            
+            // Apply a subtle entrance animation
+            resultContent.style.animation = 'fadeIn 0.3s ease';
+            
+            // Scroll to results if they're below the viewport
+            setTimeout(() => {
+                const rect = resultContent.getBoundingClientRect();
+                if (rect.top + 100 > window.innerHeight) {
+                    resultContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 100);
+        }
+    </script>
+</body>
+
+</html>
