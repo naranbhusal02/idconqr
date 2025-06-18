@@ -130,36 +130,7 @@
             background-color: #17a2b8;
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        .result-card {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 16px;
-            margin-top: 10px;
-        }
-
-        .detail-row {
-            margin-bottom: 8px;
-        }
-
-        .detail-label {
-            font-weight: bold;
-            color: #333;
-        }
-
-        .detail-value {
-            color: #555;
-        }
+        /* Your existing styles can remain here */
     </style>
 </head>
 
@@ -172,56 +143,63 @@
 
         <a href="index.html" class="back-button">← Back to Menu</a>
 
-        <div class="scanner-wrapper">
-            <h2>Scan For T-Shirt</h2>
-            <div id="reader" class="reader"></div>
-            <div class="manual-entry">
-                <input type="text" id="manualInput" placeholder="Or enter code manually...">
-                <button id="submitManual" class="btn primary">Submit</button>
+        <!-- Scanner Container -->
+        <div class="scanner-wrapper card-container">
+            <div class="card-header">
+                <h2>Scan For T-Shirt</h2>
+            </div>
+            <div class="card-body p-0">
+                <div id="reader" class="reader"></div>
+                <div class="manual-entry">
+                    <input type="text" id="manualInput" placeholder="Or enter code manually...">
+                    <button id="submitManual" class="btn primary">Submit</button>
+                </div>
             </div>
         </div>
 
-
-        <div class="tshirt-container">
-            <button id="markTshirtBtn" class="btn primary btn-large" disabled>Mark T-Shirt Received</button>
+        <!-- Action Container -->
+        <div class="card-container">
+            <div class="card-header">
+                <h3>T-Shirt Action</h3>
+            </div>
+            <div class="card-body">
+                <button id="markTshirtBtn" class="btn primary btn-large" disabled>Mark T-Shirt Received</button>
+            </div>
         </div>
 
-        <div class="result-container" id="resultContainer">
+        <!-- Result Container -->
+        <div class="result-container card-container" id="resultContainer">
             <div class="loading" id="loading">
                 <div class="spinner"></div>
                 <p>Processing...</p>
             </div>
 
             <div id="resultContent" class="hidden">
-                <div class="result-header">
-                    <h2>Scan Result</h2>
-                    <span id="statusBadge" class="badge"></span>
+                <div class="card-header">
+                    <h2>Participant Details <span id="statusBadge" class="badge"></span></h2>
                 </div>
-                <div class="result-card">
-                    <div class="result-details">
-                        <div class="detail-row">
-                            <span class="detail-label">Name:</span>
-                            <span class="detail-value" id="name">-</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label">ID:</span>
-                            <span class="detail-value" id="id">-</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label">Home Club:</span>
-                            <span class="detail-value" id="homeclub">-</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label">Zone:</span>
-                            <span class="detail-value" id="zone">-</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label">T-Shirt Status:</span>
-                            <span class="detail-value" id="tshirtStatus">-</span>
-                        </div>
+                <div class="result-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Name:</span>
+                        <span class="detail-value" id="name">-</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">ID:</span>
+                        <span class="detail-value" id="id">-</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Home Club:</span>
+                        <span class="detail-value" id="homeclub">-</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Zone:</span>
+                        <span class="detail-value" id="zone">-</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">T-Shirt Status:</span>
+                        <span class="detail-value" id="tshirtStatus">-</span>
                     </div>
                 </div>
-
                 <div id="errorMessage" class="error-message hidden"></div>
             </div>
         </div>
@@ -235,29 +213,6 @@
     <script src="js/config.js"></script>
     <script src="js/scanner.js"></script>
     <script src="js/tshirt.js"></script>
-    <script>
-        // Add this function to tshirtApp, entryApp, and foodApp
-        function showResults() {
-            const resultContent = document.getElementById('resultContent');
-
-            // First remove hidden class to make element visible
-            resultContent.classList.remove('hidden');
-
-            // Force reflow to enable animation
-            void resultContent.offsetWidth;
-
-            // Apply a subtle entrance animation
-            resultContent.style.animation = 'fadeIn 0.3s ease';
-
-            // Scroll to results if they're below the viewport
-            setTimeout(() => {
-                const rect = resultContent.getBoundingClientRect();
-                if (rect.top + 100 > window.innerHeight) {
-                    resultContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            }, 100);
-        }
-    </script>
 </body>
 
 </html>
