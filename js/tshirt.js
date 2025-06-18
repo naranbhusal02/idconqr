@@ -100,7 +100,7 @@ const tshirtApp = {
 
         // Update status badge
         const statusBadge = document.getElementById('statusBadge');
-        statusBadge.textContent = data.status || 'OK';
+        statusBadge.textContent = data.status === 'Error' ? 'Error' : 'Valid';
         statusBadge.className = data.status === 'Error' ? 'badge error' : 'badge success';
 
         this.showResults();
@@ -183,6 +183,12 @@ const tshirtApp = {
 
     showResults: function () {
         document.getElementById('resultContent').classList.remove('hidden');
+        
+        // Ensure the loading indicator is hidden
+        this.showLoading(false);
+        
+        // Update the button state based on current participant
+        this.updateTshirtButton(this.currentParticipant.hasTshirt);
     },
 
     hideResults: function () {
@@ -197,7 +203,6 @@ const tshirtApp = {
         const errorElement = document.getElementById('errorMessage');
         errorElement.textContent = message;
         errorElement.classList.remove('hidden');
-        this.showResults();
     },
 
     clearParticipantData: function () {
