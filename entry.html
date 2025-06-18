@@ -70,8 +70,7 @@
 
             <div id="resultContent" class="hidden">
                 <div class="result-header">
-                    <h2>Scan Result</h2>
-                    <span id="statusBadge" class="badge"></span>
+                    <h2>Scan Result <span id="statusBadge" class="badge"></span></h2>
                 </div>
                 <div class="result-details">
                     <div class="detail-row">
@@ -111,29 +110,6 @@
     <script src="js/config.js"></script>
     <script src="js/scanner.js"></script>
     <script src="js/entry.js"></script>
-    <script>
-        // Add this function to tshirtApp, entryApp, and foodApp
-        showResults: function() {
-            const resultContent = document.getElementById('resultContent');
-            
-            // First remove hidden class to make element visible
-            resultContent.classList.remove('hidden');
-            
-            // Force reflow to enable animation
-            void resultContent.offsetWidth;
-            
-            // Apply a subtle entrance animation
-            resultContent.style.animation = 'fadeIn 0.3s ease';
-            
-            // Scroll to results if they're below the viewport
-            setTimeout(() => {
-                const rect = resultContent.getBoundingClientRect();
-                if (rect.top + 100 > window.innerHeight) {
-                    resultContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            }, 100);
-        }
-    </script>
 </body>
 
 </html>
