@@ -59,15 +59,6 @@
         .back-button:hover {
             background-color: #e0e0e0;
         }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
     </style>
 </head>
 
@@ -153,29 +144,6 @@
     <script src="js/config.js"></script>
     <script src="js/scanner.js"></script>
     <script src="js/food.js"></script>
-    <script>
-        // Add this function to tshirtApp, entryApp, and foodApp
-        function showResults() {
-            const resultContent = document.getElementById('resultContent');
-            
-            // First remove hidden class to make element visible
-            resultContent.classList.remove('hidden');
-            
-            // Force reflow to enable animation
-            void resultContent.offsetWidth;
-            
-            // Apply a subtle entrance animation
-            resultContent.style.animation = 'fadeIn 0.3s ease';
-            
-            // Scroll to results if they're below the viewport
-            setTimeout(() => {
-                const rect = resultContent.getBoundingClientRect();
-                if (rect.top + 100 > window.innerHeight) {
-                    resultContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            }, 100);
-        }
-    </script>
 </body>
 
 </html>
